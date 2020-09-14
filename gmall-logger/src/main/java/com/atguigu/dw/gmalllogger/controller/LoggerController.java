@@ -1,23 +1,36 @@
 package com.atguigu.dw.gmalllogger.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import org.apache.log4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 
+@Api(value = "LoggerController", description = "LoggerController")
 //@Controller
 @RestController   // 等价于: @Controller + @ResponseBody
 public class LoggerController {
 
+
+	@ApiOperation(value = "用户登录", notes = "用户登录接口")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "username", value = "用户名", required = true, dataType = "string"),
+			@ApiImplicitParam(name = "passwd", value = "密码", required = true, dataType = "string")
+	})
+	@RequestMapping(value = "/login", method = {RequestMethod.POST, RequestMethod.GET})
+	@ResponseBody
+	public String login(Users data, HttpServletRequest request) {
+		return "ok";
+	}
+
+
 	//private final Logger logger = (Logger) LoggerFactory.getLogger(LoggerController.class);
 	//    @RequestMapping(value = "/log", method = RequestMethod.POST)
 	//    @ResponseBody  //表示返回值是一个 字符串, 而不是 页面名
-	@PostMapping ("/log")  // 等价于: @RequestMapping(value = "/log", method = RequestMethod.POST)
+	@PostMapping("/log")  // 等价于: @RequestMapping(value = "/log", method = RequestMethod.POST)
 	public String doLog(@RequestParam("log") String log) {
 		//JSONObject jsonObject1 = JSONObject.parseObject(log);
 		//JSONObject jsonObject = addTS(jsonObject1);
@@ -37,10 +50,11 @@ public class LoggerController {
 	 */
 	/**
 	 * 添加时间戳
+	 *
 	 * @param logObj
 	 * @return
 	 */
-	public JSONObject addTS(JSONObject logObj){
+	public JSONObject addTS(JSONObject logObj) {
 		logObj.put("ts", System.currentTimeMillis());
 		return logObj;
 	}
